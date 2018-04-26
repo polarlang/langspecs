@@ -2,3 +2,4 @@ CMakeLists.txt.user
 .idea/
 .DS_Store
 temp/
+cmake-build-debug/

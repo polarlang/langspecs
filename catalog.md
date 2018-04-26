@@ -76,4 +76,11 @@
 |---- [可调用对象默认参数](decl-default-arguments.md)<br/>
 |---- [结构化绑定](decl-structured-binding.md)<br/>
 |---- [初始化](decl-initializer.md)<br/>
+|-- [类](class-intro.md)<br/>
+|---- [类名称](class-name.md)<br/>
+|---- [类成员](class-members.md)<br/>
+|---- [子类与继承](class-members.md)<br/>
+|---- [类成员的访问控制](class-members.md)<br/>
+|---- [类特殊的方法成员](class-special-member-functions.md)<br/>
+|---- [类方法的重载](class-overload.md)<br/>
 |-- [术语表](vocabulary.md)<br/>
