@@ -24,4 +24,12 @@
 |-- [字面量](basic-lex.md#字面量)<br/>
 |-- [代码注释](basic-lex.md#代码注释)<br/>
 |- [基础概念](basic-concepts.md)<br/>
+|-- [声明和定义](basic-concepts.md#声明和定义)<br/>
+|-- [唯一定义原则](basic-concepts.md#唯一定义原则)<br/>
+|-- [作用域](basic-concepts.md#作用域)<br/>
+|-- [名字查找](basic-concepts.md#名字查找)<br/>
+|-- [编译单元与连接](basic-concepts.md#编译单元与连接)<br/>
+|-- [内存模型](basic-concepts.md#内存模型)<br/>
+|-- [数据类型](basic-concepts.md#数据类型)<br/>
+|-- [程序执行](basic-concepts.md#程序执行)<br/>
 |- [术语表](vocabulary.md)<br/>
