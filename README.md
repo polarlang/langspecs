@@ -20,6 +20,11 @@ langspecs 库定义了语言规范，目前是草案阶段，有兴趣的同学�
 
 polarlang 的语言规范是开源规范，非常欢迎感兴趣的同学给我们发 pull request 和给我们反馈错误的 issue，详情请参考我们的[*贡献细则*](CONTRIBUTING.md)。
 
+### 特别感谢
+
+> 360 无线电安全研究院 (unicornteam)<br/>
+> 开源中国
+
 ### 开始阅读
 
 点击前往 [polarlang 语言规范目录](catalog.md)
