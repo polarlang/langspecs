@@ -83,4 +83,6 @@
 |---- [类成员的访问控制](class-members.md)<br/>
 |---- [类特殊的方法成员](class-special-member-functions.md)<br/>
 |---- [类方法的重载](class-overload.md)<br/>
+|-- [异常处理](exception.md)<br/>
+|-- [泛型编程](generic-intro.md)<br/>
 |-- [术语表](vocabulary.md)<br/>
