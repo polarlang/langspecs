@@ -19,3 +19,7 @@ langspecs 库定义了语言规范，目前是草案阶段，有兴趣的同学�
 > [https://github.com/polarlang/langspecs](https://github.com/polarlang/langspecs)
 
 polarlang 的语言规范是开源规范，非常欢迎感兴趣的同学给我们发 pull request 和给我们反馈错误的 issue，详情请参考我们的[*贡献细则*](CONTRIBUTING.md)。
+
+### 开始阅读
+
+点击前往 [polarlang 语言规范目录](catalog.md)
