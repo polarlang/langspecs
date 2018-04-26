@@ -32,4 +32,17 @@
 |-- [内存模型](basic-concepts.md#内存模型)<br/>
 |-- [数据类型](basic-concepts.md#数据类型)<br/>
 |-- [程序执行](basic-concepts.md#程序执行)<br/>
+|- [标准转换](standard-conversions.md)<br/>
+|-- [左值到右值的转换](standard-conversions.md#左值到右值的转换)<br/>
+|-- [数组到指针的转换](standard-conversions.md#数组到指针的转换)<br/>
+|-- [函数到指针的转化](standard-conversions.md#函数到指针的转化)<br/>
+|-- [限制符的类型间转换](standard-conversions.md#限制符的类型间转换)<br/>
+|-- [数值类型提升](standard-conversions.md#数值提升)<br/>
+|-- [浮点类型提升](standard-conversions.md#浮点类型提升)<br/>
+|-- [数值类型转换](standard-conversions.md#数值类型转换)<br/>
+|-- [浮点类型转换](standard-conversions.md#浮点类型转换)<br/>
+|-- [指针类型转换](standard-conversions.md#指针类型转换)<br/>
+|-- [成员指针类型转换](standard-conversions.md#成员指针类型转换)<br/>
+|-- [函数指针类型转换](standard-conversions.md#函数指针类型转换)<br/>
+|-- [布尔类型转换](standard-conversions.md#布尔类型转换)<br/>
 |- [术语表](vocabulary.md)<br/>
