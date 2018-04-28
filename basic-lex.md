@@ -36,6 +36,33 @@ universal-character-name:
 ## 预处理数字
 
 ## 标识符
+```
+identifier:
+    identifier-nondigit
+    identifier identifier-nondigit
+    identifier digit
+    
+identifier-nondigit:
+    nondigit
+    universal-character-name
+    
+nondigit: one of
+    a b c d e f g h i j k l m
+    n o p q r s t u v w x y z
+    A B C D E F G H I J K L M
+    N O P Q R S T U V W X Y Z _
+
+digit: one of
+    0 1 2 3 4 5 6 7 8 9
+
+```
+
+Table 2 — Ranges of characters allowed
+
+|   column    |    column   |   column    |    column   |    column   |
+| ----------- | ----------- | ----------- | ----------- |------------ |
+| 60000-6FFFD | 70000-7FFFD | 80000-8FFFD | 90000-9FFFD | A0000-AFFFD |
+| B0000-BFFFD | C0000-CFFFD | D0000-DFFFD | E0000-EFFFD |             |
 
 ## 关键字
 
