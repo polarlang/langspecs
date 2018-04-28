@@ -33,6 +33,26 @@ universal-character-name:
 
 ## 普通词法单元
 
+产生式如下：
+```
+token:
+    identifier
+    keyword
+    literal
+    operator
+    punctuator
+```
+极语言有五种词法单元类型：
+1. 标识符 (identifiers)
+2. 关键字 (keywords)
+3. 字面量 (literals)
+4. 运算符 (operators)
+5. 其他分隔符
+
+其中空白 (Blanks)，水平制表符 (horizontal tab)，垂直制表符 (vertical tabs)，换行符 (newlines)，formfeeds 和代码注释都会被忽略，除非他们用来分割词法单元。
+
+> *Note:* 有的空白符被用来分隔相邻的标识符，关键字，数字字面量和其他包含字母表字符的词法单元
+
 ## 预处理数字
 
 ## 标识符
