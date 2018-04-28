@@ -40,6 +40,7 @@ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z<br/>
 _ { } [ ] # ( ) < > % : ; . ? * + - / ^ & | ~ ! = , \ " ’<br/>
 
 ### Unicode 字符集 (code point)
+
 我们可以通过全局字符名来引用其他字符，引用的格式如下：
 
 ```
@@ -50,6 +51,9 @@ universal-character-name:
    \u hex-quad
    \U hex-quad hex-quad
 ```
+
+`ISO/IEC 10646`中的字符`NNNNNNNN`的`universal-character-name`表示形式是`\UNNNNNNNN`。`ISO/IEC 10646`中的字符`0000NNNN`的`universal-character-name`表示形式是`\uNNNN`。如果一个`universal-character-name`字符的16进制表示对应的是一个代理码点 (`surrogate code point`)，在闭区间`0xD800–0xDFFF`中的码点(code point)，那么当前的程序语法不符合规范。额外的如果一个`universal-character-name`的16进制的值在`c-char-sequence`, `s-char-sequence`和`r-char-sequence`表示的字符之外或者不是控制字符的字符串字面量(在闭区间`0x00–0x1F`或者闭区间`0x7F–0x9F`的范围之内)或者不对应一个基本源码字符集的字符，那么程序语法是不符合规范的。
+
 
 ## 预处理词法单元
 
