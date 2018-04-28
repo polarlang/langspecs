@@ -95,6 +95,24 @@ digit: one of
 
 ## 关键字
 
+```
+|------------------|------------------|------------------|------------------|------------------|
+| alignas          | const_cast       | thread_local     | for              | public           |
+| alignof          | continue         | throw            | decltype         | goto             |
+| reinterpret_cast | true             | auto             | default          | try              |
+| bool             | inline           | return           | break            | do               |
+| int              | short            | case             | double           | long             |
+| signed           | typename         | catch            | dynamic_cast     | mutable          |
+| sizeof           | char             | else             | namespace        | static           |
+| unsigned         | char16_t         | enum             | new              | static_assert    |
+| using            | char32_t         | explicit         | noexcept         | static_cast      |
+| virtual          | class            | export           | nullptr          | struct           |
+| void             | while            | operator         | const            | false            |
+| private          | template         | constexpr        | float            | protected        |
+| this             |                  |                  |                  |                  |
+|------------------|------------------|------------------|------------------|------------------|
+```
+
 ## 字面量
 
 ## 代码注释
