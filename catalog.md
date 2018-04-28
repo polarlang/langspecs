@@ -15,7 +15,7 @@
 |-- [基础词法单元](basic-lex.md)<br/>
 |---- [文件单独编译](basic-lex.md#单独编译)<br/>
 |---- [编译过程](basic-lex.md#编译过程)<br/>
-|---- [基本字符集](basic-lex.md#基本字符集)<br/>
+|---- [字符集](basic-lex.md#字符集)<br/>
 |---- [预处理词法单元](basic-lex.md#预处理词法单元)<br/>
 |---- [普通词法单元](basic-lex.md#普通词法单元)<br/>
 |---- [预处理数字](basic-lex.md#预处理数字)<br/>
