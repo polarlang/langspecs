@@ -6,6 +6,16 @@
 
 ## 基本字符集
 
+基本源码字符集包含96个字符，主要包含如下几类：
+1. 空格符
+2. 控制字符(horizontal tab，vertical tab，form feed new-line)
+3. 可显示图形字符
+
+a b c d e f g h i j k l m n o p q r s t u v w x y z<br/>
+A B C D E F G H I J K L M N O P Q R S T U V W X Y Z<br/>
+0 1 2 3 4 5 6 7 8 9<br/>
+_ { } [ ] # ( ) < > % : ; . ? * + - / ^ & | ~ ! = , \ " ’<br/>
+
 ## 预处理词法单元
 
 ## 普通词法单元
