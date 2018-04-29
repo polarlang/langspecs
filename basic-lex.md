@@ -331,6 +331,21 @@ octal-escape-sequence:	\octal-digit	\octal-digit octal-digit	\octal-digit oct
 7. 转义序列`\ooo`由一个反斜杠开始后面跟一个，两个或者三个八进制的数如表示特定的字符。转义序列`\xhhh`由一个反斜杠开始后跟一个`x`然后紧跟一个或者多个16进制的数字来表示特定的字符，16进制的数字序列的长度没有限制。一个八进制或者16进制的序列由一个不是8进制或者16进制的数字终止。一个无前缀修饰字符字面量的值超过了`char`数据类型所能描述的最大范围，那么这个时候的值由编译器自行指定。[*Node: 如果一个由`u`,`U`或者`u8`前缀修饰的字符字面量超过了对应的数据类型的范围，那么程序是不符合规范的*]
 8. `universal-character-name`描述的字符字面量转换到运行字符集对应的字符，如果不存在这个对应的编码字符，那么久转换到由编译器使用的一个内部字符集所对应的字符上。[*Note: 早编译转换步骤1的时候，当在源代码中遇到一个扩展的字符时候，我们将其转换成`universal-character-name`进行表示，因此所有的扩展字符都是用对应的`universal-character-name`进行表示。但是编译器可以使用自己本地的字符集，只要能保证同样的结果*]
 
+### 浮点数字面量
+<pre>
+
+floating-literal:	decimal-floating-literal	hexadecimal-floating-literal
+	decimal-floating-literal:	fractional-constant exponent-partopt floating-suffix<sub>opt</sub>	digit-sequence exponent-part floating-suffix<sub>opt</sub>
+	hexadecimal-floating-literal:	hexadecimal-prefix hexadecimal-fractional-constant binary-exponent-part floating-suffix<sub>opt</sub>	hexadecimal-prefix hexadecimal-digit-sequence binary-exponent-part floating-suffix<sub>opt</sub>fractional-constant:	digit-sequenceopt . digit-sequence	digit-sequence .
+	
+hexadecimal-fractional-constant:	hexadecimal-digit-sequenceopt . hexadecimal-digit-sequence	hexadecimal-digit-sequence .
+	exponent-part:	e sign<sub>opt</sub> digit-sequence	E sign<sub>opt</sub> digit-sequence
+	binary-exponent-part:	p sign<sub>opt</sub> digit-sequence	P sign<sub>opt</sub> digit-sequence
+	sign: one of	+ -digit-sequence:	digit	digit-sequence '<sub>opt</sub> digit
+	floating-suffix: one of	f l F L
+	
+</pre>
+
 ## 代码注释
 
 代码注释分为多行注释和单行注释
