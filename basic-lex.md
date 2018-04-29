@@ -219,6 +219,30 @@ literal:	integer-literal	character-literal	floating-literal	string-literal	
 ### 整形字面量
 <pre>
 integer-literal:	binary-literal integer-suffix<sub>opt</sub>	octal-literal integer-suffix<sub>opt</sub>	decimal-literal integer-suffix<sub>opt</sub>	hexadecimal-literal integer-suffix<sub>opt</sub>
+	
+binary-literal:	0b binary-digit	0B binary-digit	binary-literal ’<sub>opt</sub> binary-digit
+	
+octal-literal:	0	octal-literal ’<sub>opt</sub> octal-digit
+	
+decimal-literal:	nonzero-digit	decimal-literal ’<sub>opt</sub> digit
+	
+hexadecimal-literal:	hexadecimal-prefix hexadecimal-digit-sequence
+
+binary-digit: one of	0 1
+	octal-digit: one of	0 1 2 3 4 5 6 7
+	nonzero-digit: one of	1 2 3 4 5 6 7 8 9
+	hexadecimal-prefix: one of	0x 0X
+	hexadecimal-digit-sequence:	hexadecimal-digit	hexadecimal-digit-sequence ’<sub>opt</sub> hexadecimal-digit
+	
+hexadecimal-digit: one of	0 1 2 3 4 5 6 7 8 9	a b c d e f	A B C D E F
+	
+integer-suffix:	unsigned-suffix long-suffix<sub>opt</sub>	unsigned-suffix long-long-suffix<sub>opt</sub>	long-suffix unsigned-suffix<sub>opt</sub>	long-long-suffix unsigned-suffix<sub>opt</sub>
+
+unsigned-suffix: one of	u U
+
+long-suffix: one of
+	l Llong-long-suffix: one of	ll LL
+
 </pre>
 
 ## 代码注释
