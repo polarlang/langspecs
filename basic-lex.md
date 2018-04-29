@@ -54,6 +54,13 @@ universal-character-name:
 
 `ISO/IEC 10646`中的字符`NNNNNNNN`的`universal-character-name`表示形式是`\UNNNNNNNN`。`ISO/IEC 10646`中的字符`0000NNNN`的`universal-character-name`表示形式是`\uNNNN`。如果一个`universal-character-name`字符的16进制表示对应的是一个代理码点 (`surrogate code point`)，在闭区间`0xD800–0xDFFF`中的码点(code point)，那么当前的程序语法不符合规范。额外的如果一个`universal-character-name`的16进制的值在`c-char-sequence`, `s-char-sequence`和`r-char-sequence`表示的字符之外或者不是控制字符的字符串字面量(在闭区间`0x00–0x1F`或者闭区间`0x7F–0x9F`的范围之内)或者不对应一个基本源码字符集的字符，那么程序语法是不符合规范的。
 
+基本运行字符集（basic execution character set）包含所有基本源代码字符集的成员，外加如下的控制字符集合：
+1. 告警字符（alert）
+2. 退格字符（backspace）
+3. 回车字符（carriage return）
+4. 空字符（null）值为0
+
+在基本运行字符集和基本源代码字符集中那些在0字符之后的字符，排在后面的字符的数值比排在前面的字符数值要大。极语言的编译器支持的运行字符集可以是基本运行字符集合的超集。运行字符集的成员已经增加的字符成员是本地化敏感的字符。（locale-specific）
 
 ## 预处理词法单元
 
