@@ -25,6 +25,7 @@
 8. 已经完成转换的转换单元与实例化单元按照如下的对着进行合并。[*Note: 某些或者全部的词法单元可能来自库文件*]对所有的已完成转换的转换单元进行分析，产生一个需要模板实例化的列表。[*Note：这个列表中包含哪些显式需要实例化的词法单元*]，依赖的模板定义被定位，是否需要在转换单元的源代码中包含这些定义有极语言编译器决定。[*Note: 编译器可以提前把依赖的模板定义转换成已转换的转换单元，那么这里就可以不需要出现在源代码里面*] 执行所有的模板实例化产生模板实例化单元。[*Note: 实例化单元跟转换单元类似，但是不包含模板实例化请求单元和模板定义单元*] 如果任何模板实例化过程失败，那么程序是不规范的。
 9. 所有的外部的实体引用都已解决 (resolved)，当前转换单元的所有外部符号引用都通过链接的库进行解决 (resolved)，所有的转换单元被输出到程序映像文件中，这个文件可以直接在执行环境中执行。
 
+
 ## 字符集
 
 ### 基本源码字符集
@@ -64,6 +65,8 @@ universal-character-name:
 
 ## 预处理词法单元
 
+待定，可能不支持通用的预处理
+
 ## 普通词法单元
 
 产生式如下：
@@ -87,6 +90,8 @@ token:
 > *Note:* 有的空白符被用来分隔相邻的标识符，关键字，数字字面量和其他包含字母表字符的词法单元
 
 ## 预处理数字
+
+待定,可能不支持预处理
 
 ## 标识符
 ```
@@ -202,6 +207,19 @@ preprocessing-op-or-punc:
 所有的`preprocessing-op-or-punc`在编译过程步骤7转换成单个的词法单元(token)
 
 ## 字面量
+
+### 字面量种类
+
+极语言支持如下几种字面量：
+
+```
+literal:	integer-literal	character-literal	floating-literal	string-literal	boolean-literal	pointer-literal	user-defined-literal
+```
+
+### 整形字面量
+<pre>
+integer-literal:	binary-literal integer-suffix<sub>opt</sub>	octal-literal integer-suffix<sub>opt</sub>	decimal-literal integer-suffix<sub>opt</sub>	hexadecimal-literal integer-suffix<sub>opt</sub>
+</pre>
 
 ## 代码注释
 
