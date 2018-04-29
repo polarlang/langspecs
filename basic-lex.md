@@ -282,6 +282,27 @@ long-suffix: one of
 ```
 如果一个整形字面量不能用上面的表中所列举的类型进行表示，那么他如果能被扩展的整形类型表示，那么可以被转换成一个扩展的整形类型进行表示。如果上表中的类型是有符号的类型，那么对应的扩展类型也应为有符号类型。如果上表的中的类型是无符号，那么对应的扩展类型也应该是无符号类型。如果列表中的类型是既包含有符号类型又包含无符号类型，那么对应的扩展类型也应该既包含有符号类型又包含无符号类型。如果在一个转换单元中整形字面量不能使用任何允许的整形类型进行表示，那么程序的语法是不符合规范的。
 
+### 字符字面量
+
+<pre>
+
+character-literal:	encoding-prefixopt 'c-char-sequence'
+	
+encoding-prefix: one of	u8 u U L
+
+c-char-sequence:	c-char	c-char-sequence c-char
+
+c-char:
+	除了单引号`'`，反斜杠`\`和换行符之外的任何源代码字符集里面的字符	escape-sequence	universal-character-name
+	
+escape-sequence:	simple-escape-sequence	octal-escape-sequence	hexadecimal-escape-sequence
+	
+simple-escape-sequence: one of	\’ \" \? \\	\a \b \f \n \r \t \v
+
+octal-escape-sequence:	\octal-digit	\octal-digit octal-digit	\octal-digit octal-digit octal-digit
+
+</pre>
+
 ## 代码注释
 
 代码注释分为多行注释和单行注释
