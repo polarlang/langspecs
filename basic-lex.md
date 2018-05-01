@@ -348,6 +348,44 @@ hexadecimal-fractional-constant:	hexadecimal-digit-sequenceopt . hexadecimal-di
 
 一个浮点数字面量由一个可选的基数和整数部分，基数点，后跟一个小数部分，后跟一个`e`,`E`,`p`或者`P`，后面一个可选的的指数符号，最后是一个可选的类型后缀。整数部分和小数部分如果没有指定前缀那么默认是十进制的数字序列，如果有前缀`0x`或者`0X`，那么就是十六进制的数字序列。当浮点字面量无前缀时，叫做十进制浮点字面量，当有前缀`0x`或者`0X`的时候叫做十六进制浮点数。在数字序列中出现的数位分隔符`'`在计算值的时候需要被忽略[*例子：以下两个浮点字面量的值是相等的：1.602’176’565e-19 和 1.602176565e-19*]。整数部分和小数部分都可以省略。十进制浮点字面量中的基数点(`radix point`)和字母`e`，`E`跟后面的指数部分可以省略，但是不能同时省略。在十六进制浮点字面量中，基数点可以省略，但是指数部分不能省略。整数部分，基数点和小数部分组成了浮点数字面量的有效数位（`significand `）。在十进制浮点字面量中如果指数存在，那么有效数位是按照`10`的指数方式进行放大。在十六进制浮点字面量中，有效数位是按照2的指数进行放大。[*例子：浮点字面量：49.625和0xC.68p+2值是相等的*]如果缩放因子在当前类型所能表示的范围内，那么值就是有效数位与缩放因子的乘积，缩放因子过大或者过小，这个时候的值由编译器自行决定。类型后缀`f`和`F`代表当前的浮点数类型为`float`，类型后缀`l`和`L`代表当前的浮点数类型为`long double`。如果缩放之后的值不在相应的数据类型的表示范围之内，那么程序是不符合规范的。
 
+### 字符串字面量
+
+<pre>
+
+string-literal:	encoding-prefix<sub>opt</sub> " s-char-sequenceopt "	encoding-prefix<sub>opt</sub> R raw-string
+
+s-char-sequence:	s-char	s-char-sequence s-char
+	
+s-char:
+	除了双引号`"`，反斜杠`\`和换行符之外的所有源代码字符集的字符集合	escape-sequence	universal-character-name
+
+raw-string:	" d-char-sequenceopt ( r-char-sequence<sub>opt</sub> ) d-char-sequence<sub>opt</sub> "
+
+r-char-sequence:	r-char	r-char-sequence r-char
+
+r-char:	any member of the source character set, except	a right parenthesis ) followed by the initial d-char-sequence	(which may be empty) followed by a double quote ".
+	
+d-char-sequence:	d-char	d-char-sequence d-char
+
+d-char:	any member of the basic source character set except:	space, the left parenthesis (, the right parenthesis ), the backslash \,	and the control characters representing horizontal tab,	vertical tab, form feed, and newline.
+</pre>
+
+#### 字符串字面量解释说明
+
+
+
+### 布尔类型字面量
+
+<pre>
+boolean-literal:	false	true
+</pre>
+
+### 指针字面量
+
+<pre>
+pointer-literal:	nullptr
+</pre>
+
 ## 代码注释
 
 代码注释分为多行注释和单行注释
