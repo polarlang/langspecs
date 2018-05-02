@@ -4,3 +4,7 @@
 2. 本章节不包含那些只影响语言一部分的特性，这种单一的语言特性我们将在专门的章节进行讨论和规范。
 3. 程序实体(entity)是如下的类型的总称：值(`value`)，对象(`object`)，引用(`reference`)，结构化绑定(`structured binding`)，函数(`function`)，枚举(`enumerator`)，数据类型(`type`)，类成员(`class member`)，模板(`template`)，模板特殊化(`template specialization`)，命名空间(`namespace`)或者形参包装(`parameter pack`)。
 4. 名字是使用`identifier`，`operator-function-id`，`literal-operator-id`，`conversionfunction-id`或者`template-id`去表示程序实体(`entity`)或者标号(`label`)的一种符号。
+5. 所有实体的名字由产生式`declaration`进行引入，所有标号名字由产生式`labeled-statement`或者`goto`语句进行引入。
+6. 一个变量(variable)是通过定义一个非静态成员或者对象的引用而引入的，如果一个变量具有名字，他表示这个引用或者对象本身（todo: 极语言可能没有栈对象的创建方式）。
+7. 一个局部实体是一个具有自动生命周期的变量，或者是一个结构化绑定，其中绑定项变量的具备自动化生命周期。或者`*this`类型的变量。
+8. 有些名字表示数据类型和模板类型。通常来说，当遇到一个名字的时候，我们在开始后续的解析之前必须查找到名字对应的程序实体。这个查找过程叫做**名字查找 (name lookup)**。
