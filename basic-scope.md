@@ -52,4 +52,26 @@
 	}
 	// 这里枚举项（enumerator）x 使用常量 x 的值进行初始化
 	```
-	
+6. 在一个类成员的声明点之后，在类作用域中都可以通过成员名进行查找。
+	[*Note: 当类还没有看到完成的定义时，这条规则也成立*]
+	```cpp
+	struct X
+	{
+	   enum E
+	   {
+	      z = 16;
+	   };
+	   int b[x::E::z]; // OK
+	};
+	```
+7. 对于`elaborated-type-specifier`产生式的类声明的声明点由以下规则指定：
+	1. 对于声明形式为：
+		```cpp
+		class-key attribute-specifier-seqopt identifier;
+		```
+		会在声明出现的作用域中引入一个名字叫做`identifier `的类类型，否则参考下面一条规则。
+	2. 对于声明形式为：
+		```cpp
+		class-key identifier;
+		```
+		如果`elaborated-type-specifier`被用于`decl-specifier-seq`产生式或者被用于一个在命名空间的函数定义的`parameter-declaration-clause`产生式中，那么在声明出现的命名空间里面引入名字为`identifier`的类类型；否则`identifier`将在包含声明的最小命名空间或者块作用域引入。[*Note: 这些规则在模板领域同样适用*] [*Note: 其他形式的`elaborated-type-specifier`没有声明一个新的名字，因此必须引用一个存在的类型名*]
