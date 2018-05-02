@@ -1,4 +1,4 @@
-# 唯一定义原则
+# 唯一定义原则（未完）
 
 1. 任何一个转换单元里面的任何变量，函数，类类型，枚举类型和模板类型都只能存在一个定义。
 2. 除了不求值操作数（unevaluated operand）和子表达式之外的表达式都是可能求值（potentially evaluated）的表达式。一个表达式`expr`可能的结果 *`potential results`* 定义如下：
