@@ -75,3 +75,20 @@
 		class-key identifier;
 		```
 		如果`elaborated-type-specifier`被用于`decl-specifier-seq`产生式或者被用于一个在命名空间的函数定义的`parameter-declaration-clause`产生式中，那么在声明出现的命名空间里面引入名字为`identifier`的类类型；否则`identifier`将在包含声明的最小命名空间或者块作用域引入。[*Note: 这些规则在模板领域同样适用*] [*Note: 其他形式的`elaborated-type-specifier`没有声明一个新的名字，因此必须引用一个存在的类型名*]
+8. `injected-class-name`的声明点是从类定义的左大括号开始。
+9. 函数局部预定义的变量的声明点从函数体定义开始的地方开始。
+10. 在`range-based` 类型的 `for`循环的`for-range-declaration`产生式中，变量和结构化绑定的声明点是从`for-range-initializer`产生式的后面开始。
+11. 模板形参的声明点是从该模板形参的完整定义后面开始。
+	例子：
+	
+	```cpp
+	typedef unsinged char T;
+	template <typename T
+				= T, // 此时 T 被定义成 unsiged char
+				, T, // 此时 T 为模板参数 T
+				N = 0>
+	class A
+	{};
+	```
+12. [*Note: 函数友元声明和类友元声明引用的是最近的作用域的命名空间闭包里面的成员，他们不在当前作用域里面引入新的名字。在块作用域里面声明函数和`extern`类型的变量声明，他们引用的是命名空间闭包里面的成员，但是他们都不往当前作用域里面引入新的名字。*]
+13. [*Note: 模板实例化的点。*]
