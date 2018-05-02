@@ -39,4 +39,17 @@
 	}
 	// 在块作用域中定义一个具有两个元素的数组变量
 	```
-3. 
+3. 通过`class-specifier`产生式声明的类或者类模板的声明点是在其`class-head`产生式产生的`identifier`或者`simple-template-id`（如果有的话）后面。一个由`enum-specifier`产生式推导的枚举类型的声明点从其`identifier`开始，一个别名或者模板别名从别名引用的`type-id`开始。
+4. 一个没有选择构造函数的`using-declarator`的声明点是用器声明符后面开始。
+5. 一个枚举符的声明点从它的枚举项定义完成（enumerator-definition）后开始。
+	
+	```cpp
+	const int x = 12;
+	{
+	   enum {
+	      x = x;
+	   };
+	}
+	// 这里枚举项（enumerator）x 使用常量 x 的值进行初始化
+	```
+	
