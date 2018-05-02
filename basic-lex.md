@@ -167,7 +167,7 @@ digit: one of
 | alignas          | const_cast       | thread_local     | for              | public           |
 | alignof          | continue         | throw            | decltype         | goto             |
 | reinterpret_cast | true             | auto             | default          | try              |
-| bool             | inline           | return           | break            | do               |
+| boolean          | inline           | return           | break            | do               |
 | int              | short            | case             | double           | long             |
 | signed           | typename         | catch            | dynamic_cast     | mutable          |
 | sizeof           | char             | else             | namespace        | static           |
@@ -187,7 +187,7 @@ digit: one of
 |------------------|------------------|------------------|------------------|------------------|
 | asm              | friend           | register         | typeid           | union            |
 | extern           | concept          | delete           | wchar_t          | include          |
-| require          |                  |                  |                  |                  |
+| require          | bool             |                  |                  |                  |
 |------------------|------------------|------------------|------------------|------------------|
 ```
 ## 运算符与标点符号 (Operators and punctuators)
@@ -416,11 +416,15 @@ const char* p = R"(a\bc)";assert(polar::strcmp(p, "a\\\nb\nc") == 0);
 boolean-literal:	false	true
 </pre>
 
+1. 布尔字面量是由关键字`false`和`true`进行表示，具备`prvalues`值类型，并且具有类型`boolean`。
+
 ### 指针字面量
 
 <pre>
 pointer-literal:	nullptr
 </pre>
+
+1. 指针字面量由关键字`nullptr`进行表示，具有`prvalues`值类型`polar::nullptr_t`。[*Note: polar::nullptr_t 既不是常规类型的指针类型也不是指成员指针类型。一个`polar::nullptr_t`类型的`prvalue`是一个`null`的常量指针，并且可以转换成普通的空指针和空成员指针*]
 
 ## 代码注释
 
