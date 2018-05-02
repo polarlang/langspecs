@@ -395,6 +395,7 @@ const char* p = R"(a\bc)";assert(polar::strcmp(p, "a\\\nb\nc") == 0);
 <pre>
 表8 字符串字面量串连编码规则
 
+|-----------|-------|-----------|-------|
 |   source  | Means |   source  | Means |
 |-----------|-------|-----------|-------|
 | u"a" u"b" | u"ab" | U"a" U"b" | U"ab" |
