@@ -26,7 +26,7 @@
 	15. 一个显式模板实例化声明
 	16. 一个显示式的并且不是定义的模板特殊化
 	
-	```
+	```cpp
 	// 一个当有程序定义的声明叫做定义，下面例子中除了一个是程序实体声明，其余的都是程序定义：
 	
 	int a; // 定义整形变量 a
@@ -78,3 +78,49 @@
 	using N::d; // 声明 d
 	```
 3. 在一定的情况下编译器会自动为类型定义默认构造函数，复制构造函数，移动构造函数，复制运算符成员函数和移动运算符成员函数。
+
+	```cpp
+	
+	import polar.lang.String;
+	
+	class C
+	{
+	   String m_str; // polar.lang.String 是标准库中定义的类型
+	};
+	
+	int main()
+	{
+	   C a;
+	   C b = a;
+	   b = a;
+	}
+	
+	// 极语言编译器会自动为类 C 添加成员函数，等价下面的代码：
+	class C
+	{
+	   String m_str;
+	   C() : s()
+	   {}
+	   
+	   C(const C& x): s(x.s)
+	   {}
+	   
+	   C(C&& x): s(polar::move(x.m_str)) noexcept
+	   {}
+	   
+	   C& operator=(const C& x)
+      {
+         m_str = x.m_str;
+         return *this;
+      }
+	   
+	   C& operator(C&& x) noexcept
+      {
+          m_str = polar::move(x.m_str);
+          return *this;
+      }
+	};
+	```
+4. 一个类名可以通过`elaborated-type-specifier`产生式推导出的语句隐式声明。
+5. 当需要一个对象的定义的时候但是当前这个对象的定义不完整，这个时候程序是不符合规范的。
+
