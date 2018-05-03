@@ -205,4 +205,45 @@
 
 ## 模板形参作用域
 
-1. 
+1. 一个由`template template-parameter`表达式引入的模板形参名字的声明区域是名字所在的`template-parameter-list`中的最小区域。
+2. 一个模板的模板形参名字的声明区域是从名字所在的`template-declaration`最小区域。仅仅是模板形参的名字属于这一区域。模板声明`template-declaration`引入的其他名字不会加入到这个声明区域，这些名字会加入到跟采用非模板声明时相同的名字所属的声明区域中去。
+	
+	例子说明：
+	
+	```cpp
+	namespace N
+	{
+	   template <typename T> struct A {}; // #1
+	   template <typename U> void f(U) {} // #2
+	   struct B {
+	      template <typename V> friend int g(struct C*); // #3
+	   };
+	};
+	```
+	名字 `T`，`U`和`V`的声明区域是 #1，#2 和 #3所代表的模板声明表达式区域（template-declarations）。名字`A`，`f`，`g`和 `C`全部属于同一个声明区域，这个区域是命名空间体。（namespace-body）名字`g`属于这个声明区域，尽管在限定或者非限定名字查找时他被隐藏。
+3. 模板形参可能的作用域从名字的声明点开始到所在的声明区域结束。[*Note: 这条规则蕴含着，当前的模板形参可以参与到后续的新参声明表达式中，或者作为其默认参数，但是不能用于当前形参前面的形参相关的声明语句和用作其默认参数*]
+	
+	例子说明：
+	
+	```cpp
+	template<class T, T* p, class U = T> class X { /* ... */ };
+	template<class T> void f(T* p = new T);
+	```
+	这条规则同样蕴含着，模板形参可以用来定义基类：
+	
+	```cpp
+	template<class T> class X : public Array<T> { /* ... */ };
+	template<class T> class Y : public T { /* ... */ };
+	```
+	把模板形参用于指定基类，那么在模板实例化的时候，对应的模板实参必须看到完成的定义，不能仅仅只看到声明。
+4. 模板形参的名字在声明点之后马上嵌入直接包含其声明区域的闭包作用域。[*Note: 这条规则暗示着，在其声明点之后马上隐藏这个名字的闭包作用域中相同的名字*]
+	
+	例子说明：
+	
+	```cpp
+	typedef int N;
+	template<N X, typename N, template<N Y> class T> struct A;
+	```
+	在这里，`X` 的类型是非模板参数类型`int`，但是`Y`的类型是模板参数`N`所代表的类型
+5. [*Note: 因为模板形参的名字不能在其可能的作用域中重新声明，所以一个形参的作用域与其可能的作用是相同的。尽管如此，模板的形参的名字依旧可能被隐藏。todo: 怎么隐藏？*]
+	
