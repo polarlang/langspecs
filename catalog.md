@@ -27,7 +27,7 @@
 |---- [声明和定义](basic-declaration-and-definition.md)<br/>
 |---- [唯一定义原则](basic-odr.md)<br/>
 |---- [作用域](basic-scope.md)<br/>
-|---- [名字查找](basic-concepts.md#名字查找)<br/>
+|---- [名字查找](basic-name-lookup.md)<br/>
 |---- [编译单元与连接](basic-concepts.md#编译单元与连接)<br/>
 |---- [内存模型](basic-concepts.md#内存模型)<br/>
 |---- [数据类型](basic-concepts.md#数据类型)<br/>
