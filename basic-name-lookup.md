@@ -239,3 +239,87 @@
 	3. 除了重载函数声明和函数模板之外的名字都被忽略。
 
 ## 限定名字查找
+
+1. 在类和命名空间的成员的名字或者枚举项的名字可以通过应用在`nested-name-specifier`上的作用域访问运算符`::`的方式进行访问，这里的`nested-name-specifier`代表类名或者命名空间或者枚举的名字。如果应用在`nested-name-specifier`的作用域访问运算符`::`之前没有`decltype-specifier`修饰，那么在作用域运算符之前的名字只考虑命名空间，类型[*todo: 原文是`types`，这里包含原生类型吗？还是只是类类型。*]或者被特殊化成类型的模板。如果找到的名字不指示一个命名空间，类，枚举或者依赖的类型[*todo: 何为依赖的类型`dependent type`。*]那么程序是不符合规范的。
+	
+	例子说明：
+	
+	```cpp
+	class A
+	{
+	public:
+	   static int n;
+	};
+	
+	int main()
+	{
+	   int A;
+	   A::n = 42; // :: 之前的只考虑命名空间类类型
+	   A b; // 编译错误 A 不是一个类型
+	}
+	```
+2. [*Note: 多重限定名字，比如：`N1::N2::N3::n`，可以用来引用嵌套类的成员或者嵌套命名空间的成员。*]
+3. 在一个声明语句中，如果`declarator-id`是一个`qualified-id`，用在`qualified-id`之前的名字在定义所在的命名空间中查找，在`qualified-id`之后的名字在成员所在的类或者命名空间的作用域中查找。
+	
+	例子说明：
+	
+	```cpp
+	class X{};
+	class C
+	{
+	   class X{};
+	   static const int number = 50;
+	   static X arr[number];
+	};
+	
+	X C::arr[number]; // 语法错误
+	                  // 等价于 ::X C::arr[C::number]
+	                  // 而不是 C::X C::arr[C::number]
+	```
+4. 一个被一元命名空间访问运算符修饰的名字，将在全局命名空间中进行查找，在全局命名空间中其使用之前应该被声明或者其声明被`using-directive`引入到全局命名空间。通过一元命名空间作用域访问法，可以在名字在当前作用域被隐藏的情况下访问全局命名空间下的声明。
+5. 一个被枚举类型的`nested-name-specifier`前缀修饰的名字，必须是该枚举类型下的一个枚举项的名字。
+6. 如果`pseudo-destructor-name`中包含有`nested-name-specifier`，那么其中的`type-names`名字就在`nested-name-specifier`指示的命名空间中查找。类似的如果一个`qualified-id`具备如下的形式：
+
+	<pre>
+	nested-name-specifier<sub>opt</sub> class-name::~class-name
+	</pre>
+	第二个`class-name`查找的作用域跟第一个`class-name`一样。
+	
+	举个例子：
+	
+	```cpp
+	class C
+	{
+	   typedef int I;
+	};
+	
+	typedef int I1, I2;
+	extern int *p;
+	extern int *q;
+	p->C::I::~I(); // I 在类 C 中进行查找
+	q->I1::~I2(); // I2 在后缀表达式所在的作用域中进行查找
+	
+	class A
+	{
+	   ~A();
+	};
+	
+	typedef A AB;
+	
+	int main()
+	{
+	   AB *p;
+	   p->AB::~AB(); // 显式的调用A的析构函数
+	}
+	
+	```
+	
+### 类成员名字查找
+
+### 命名空间名字查找
+
+## Elaborated 类型指示符
+
+## 类成员访问
+
+## using 指令和命名空间别名
