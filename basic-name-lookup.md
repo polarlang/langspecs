@@ -351,7 +351,7 @@
 ### 命名空间名字查找
 
 1. 如果一个`qualified-id`的`nested-name-specifier`指示一个命名空间（包含`nestedname-specifier`是`::`的情况，指定为全局命名空间），在`nested-name-specifier`之后指定的名字在`::`前面的命名空间作用域进行查找。在`template-id`的`template-argument`出现的名字，将在`postfix-expression`完成出现的上下文中作用域进行查找。
-2. 对于一个命名空间`X`和一个名字`m`，命名空间限定的查找集合`S(X,m)`定义如下：让`S'(X,m)`代表名字`m`在命名空间`X`和`X`里面`inline`命名空间中所有的声明集合。如果`S'(X,m)`不为空，那么`S(X,m)`就是`S'(X,m)`；否则，`S(X,m)`是所有`S(N<sub>i</sub>,m)`的并集，其中`N<sub>i</sub>`是在命名空间`X`及其`inline`命名空间通过`using-directives`语句引入的命名空间的集合。
+2. 对于一个命名空间`X`和一个名字`m`，命名空间限定的查找集合`S(X,m)`定义如下：让`S'(X,m)`代表名字`m`在命名空间`X`和`X`里面`inline`命名空间中所有的声明集合。如果`S'(X,m)`不为空，那么`S(X,m)`就是`S'(X,m)`；否则，`S(X,m)`是所有 S(N<sub>i</sub>,m) 的并集，其中 N<sub>i</sub> 是在命名空间`X`及其`inline`命名空间通过`using-directives`语句引入的命名空间的集合。
 3. 给定一个`X::m`（`X`是用户自定义的命名空间）或者`::m`（`X`是一个全局命名空间），如果`S(X,m)`是一个空集，那么程序是不符合规范的。如果`S(X,m)`只有一个成员，或者引用的上下文是一个`using-declaration`，`S(X,m)`是名字的必要声明集合。否则如果`m`的使用没有被集合中`S(X,m)`唯一一个声明表示，那么程序不符合规范的。
 	
 	例子说明：
@@ -478,7 +478,7 @@
 	   B::b++; // 直接定义在命名空间中 S = {B::b}
 	}
 	```
-6. 在查找首先命名空间成员名字的时候，如果发现多个关于这个成员的声明，如果其中一个声明引入了一个类名字或者枚举类型的名字，其他的声明要么引用同一个变量，或者同一个枚举项或者重载函数集合，当且仅当非类型名字出现在跟类声明和枚举类型声明同一作用域时，会隐藏其名字的声明，否则程序是不符合规范的。
+6. 在查找受限命名空间成员名字的时候，如果发现多个关于这个成员的声明，如果其中一个声明引入了一个类名字或者枚举类型的名字，其他的声明要么引用同一个变量，或者同一个枚举项或者重载函数集合，当且仅当非类型名字出现在跟类声明和枚举类型声明同一作用域时，会隐藏其名字的声明，否则程序是不符合规范的。
 	
 	例子说明：
 	
@@ -599,6 +599,56 @@
 	
 ## 类成员访问
 
-
+1. 在类成员访问表达式中，如果`.`或者`->`后面直接跟一个后跟`<`符号的`identifier`，那么在进行名字查找的时候必须确定`<`是开始一个参数列表还是小于运算符。`identifier`首先在对象的类的名称空间寻找成员名字，如果没有找到，那么就在整个`postfix-expression`所在的上下文中寻找，这个时候`identifier`应该是类模板的名字。
+2. 如果在类成员访问表达式中的`id-expression`是一个非限定名字`unqualified-id`，并且对象表达式的类型是类类型`C`，那么这个`unqualified-id`将在类类型`C`的作用域中进行查找。对于一个`pseudo-destructor`调用，`unqualified-id`将在完整的`postfix-expression`的上下文中进行查找。
+3. 如果`unqualified-id`是`~type-name`，那么`type-name`在完整的后缀表达式`postfix-expression`所在的上下文中进行查找。<br/>
+	如果对象表达式的类型为类型`T`是类类型`C`，`type-name`，也将在类类型`C`中进行查找。至少能查到到一个名字，它引用`cv T`。
+	
+	例子说明：
+	
+	```cpp
+	class A {};
+	class B
+	{
+	   class A {};
+	   void f(::A *a);
+	}
+	
+	void B::f(::A *a)
+	{
+	   a->~A(); // 通过 *a 的类型找到了`injected-class-name`
+	}
+	```
+4. 在类成员访问表达式中的`id-expression`是一个`qualified-id`是如下的形式：
+	<pre>
+	class-name-or-namespace-name::...
+	</pre>
+	跟在`.`或者`->`后面的`class-name-or-namespace-name`，首先会在对象表达式的类类型去找，如果找到就使用，否则就在完整的后缀表达式`postfix-expression`的上下文中去寻找。
+5. 如果`qualified-id`具有如下的形式：
+	`::class-name-or-namespace-name::...`
+	那么`class-name-or-namespace-name`会在全局命名空间中当做类名字或者命名空间名字取查找。
+6. 如果`nested-name-specifier`包含了一个`simple-template-id`，那么在`template-arguments`中的名字会在完整的后缀表达式`postfix-expression`所在的上下文中去查找。
+7. 如果`id-expression`是一个`conversion-function-id`，它的`conversion-type-id`在对象表达式的类型中进行查找，如果找到就使用。否则就在完整的后缀表达式所在的上下文中进行查找。在所有的这些查找中，只有类型名，或者模板特殊化得到的类型名字会被考虑。
+	
+	例子说明：
+	
+	```cpp
+	class A {};
+	namespace N
+	{
+	   class A {
+	      void g() {}
+	      template <typename T> operator T();
+	   }
+	}
+	
+	int main()
+	{
+	   N::A a;
+	   a.operator A(); // 调用 N::A::operator N::A
+	}
+	```
 
 ## using 指令和命名空间别名
+
+在一个`using-directive`和`namespace-alias-definition`，在查找`namespace-name`或者在`nested-name-specifier`中的名字时候，只有命名空间名字会被考虑。
