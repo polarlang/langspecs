@@ -316,6 +316,38 @@
 	
 ### 类成员名字查找
 
+1. 如果一个`qualified-id`的`nested-name-specifier`指示一个类，在`nested-name-specifier`之后的名字将在这个类中进行查找，除了下面指出的这些情况。名字应该代表这个类或者其基类的成员名字。[*Note：一个类的成员可以使用`qualified-id`的方式在该类的可能的作用域范围里进行引用。*]，上面名字查找规则的意外的情况如下：
+	1. 析构函数查找规则特殊，在上一节中已经指出。
+	2. `conversion-function-id`的`conversion-type-id`的查找方式跟把`conversion-type-id`看成类成员名字，跟类成员的访问方式一样。
+	3. `template-id`的`template-argument`里面的名字，在整个后缀表达式所在的作用域中进行查找。
+	4. `using-declaration`中的名字查找会考虑在当前作用域中被隐藏的类和枚举的类型声明。
+2. 在一个函数的名字不能忽略并且`nested-name-specifier`指示的是一个类`C`的查找过程中：
+	1. 如果一个名字出现在`nested-name-specifier`的后面，当在类`C`中进行名字查找并找到相关名字且名字是类`C`的`injected-class-name`成员。
+	2. 在一个`using-declaration`的`using-declarator`是一个`member-declaration`。如果在`nested-name-specifier`后面指定的名字跟`identifier`一样的时候或者`simple-template-id`的`template-name`出现在`nested-name-specifier`最后一部分的时候，
+这个名字被解释为类`C`的构造函数。[*Note: 举个例子：在`elaborated-type-specifier`中，构造函数不是可接受的情况，所以构造函数不能用在`injected-class-name`出现的地方。*]这样的一个构造函数的名字只能用在那是命名一个构造函数的`declarator-id`里面，或者在一个`using-declaration`里面。[*todo: 这条规则有点晕*]
+	
+	例子说明：
+	
+	```cpp
+	class A
+	{
+       A();
+	};
+	
+	class B extend A
+	{
+	   B();
+	};
+	
+	A::A() {}
+	B::B() {}
+	
+	B::A ba; // 对象的类型是 A
+	A::A a; // A::A 不是一个类型
+	class A::A a2; // 对象的类型是 A
+	```
+3. 一个被嵌套声明区域或者派生类隐藏的类成员的声明，可以通过使用类名后跟作用域访问运算符加成员名字进行访问。
+
 ### 命名空间名字查找
 
 ## Elaborated 类型指示符
