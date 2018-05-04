@@ -552,6 +552,53 @@
 
 ## Elaborated 类型指示符
 
+1. `elaborated-type-specifier`可能被用作去引用前面被非类型名字隐藏的类或者枚举类型的声明。
+2. 如果`elaborated-type-specifier`没有`nested-name-specifier`并且除非`elaborated-type-specifier`在一个声明中按照如下形式出现
+	<pre>
+	class-key attribute-specifier-seq<sub>opt</sub> identifier;
+	</pre>
+	这个时候`identifier`按照非限定名字查找规则进行查找，但是查找的时候忽略掉非类型名字。如果`elaborated-type-specifier`通过`class-key`引入并且在前面的定义之中没有声明`type-name`或者如果`elaborated-type-specifier`在一个声明中按照如下的形式出现:
+	<pre>
+	class-key attribute-specifier-seq<sub>opt</sub> identifier;
+	</pre>
+	这个时候`elaborated-type-specifier`会在当前作用域中引入一个`class-name`的声明。
+3. 如果`elaborated-type-specifier`具有一个`nested-name-specifier`，那么将按照限定名字查找规则进行查找，但是忽略非类型的名字，如果在前面没有查找到`type-name`的声明，那么`elaborated-type-specifier`是不符合规范的。
+	
+	例子说明：
+	
+	```cpp
+	class Node
+	{
+	   class Node *Next;// OK 引用全局作用域的 Node
+	   class Data *Data; // 在全局命名空间声明 Data 类型 同时定义成员 Data, todo 为什么？
+	}
+	
+	class Data
+	{
+	   class Node *Node; // 引用全局 Node 类型
+	   friend class ::Glob; // Glob 类型不存在，不能引入受限类型
+	   friend class Glob; // OK 友元方式引用会在全局命名空间声明类型 Glob
+	}
+	
+	class Base
+	{
+	   class Data; // 声明嵌套类型 Data
+	   class ::Data *thatData; // 引用全局类型 ::Data
+	   class Base::Data *thisData; // 引用嵌套类型 Data
+	   friend class ::Data; // 引用全局类型 Data, 全局Data是个友元
+	   friend class Data; // 引用嵌套类型，嵌套类型是个友元
+	   class Data {}; // 定义嵌套类型 Data
+	}
+	
+	class Data; // 重新声明全局命名空间 Data
+	class ::Data; // 不能引入受限名字
+	class Base::Data; // 不能引入受限类型
+	class Base::Datum; // Datum 未定义
+	class Base::Data *pBase; // 引用嵌套类型 Data
+	```
+	
 ## 类成员访问
+
+
 
 ## using 指令和命名空间别名
