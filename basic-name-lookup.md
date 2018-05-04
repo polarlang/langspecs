@@ -350,6 +350,206 @@
 
 ### 命名空间名字查找
 
+1. 如果一个`qualified-id`的`nested-name-specifier`指示一个命名空间（包含`nestedname-specifier`是`::`的情况，指定为全局命名空间），在`nested-name-specifier`之后指定的名字在`::`前面的命名空间作用域进行查找。在`template-id`的`template-argument`出现的名字，将在`postfix-expression`完成出现的上下文中作用域进行查找。
+2. 对于一个命名空间`X`和一个名字`m`，命名空间限定的查找集合`S(X,m)`定义如下：让`S'(X,m)`代表名字`m`在命名空间`X`和`X`里面`inline`命名空间中所有的声明集合。如果`S'(X,m)`不为空，那么`S(X,m)`就是`S'(X,m)`；否则，`S(X,m)`是所有`S(N<sub>i</sub>,m)`的并集，其中`N<sub>i</sub>`是在命名空间`X`及其`inline`命名空间通过`using-directives`语句引入的命名空间的集合。
+3. 给定一个`X::m`（`X`是用户自定义的命名空间）或者`::m`（`X`是一个全局命名空间），如果`S(X,m)`是一个空集，那么程序是不符合规范的。如果`S(X,m)`只有一个成员，或者引用的上下文是一个`using-declaration`，`S(X,m)`是名字的必要声明集合。否则如果`m`的使用没有被集合中`S(X,m)`唯一一个声明表示，那么程序不符合规范的。
+	
+	例子说明：
+	
+	```cpp
+	int x;
+	namespace Y
+	{
+	   void f(float);
+	   void h(int);
+	}
+	
+	namespace Z
+	{
+	   void h(double);
+	}
+	
+	namespace A
+	{
+	   using namespace Y;
+	   void f(int);
+	   void g(int);
+	   int i;
+	}
+	
+	namespace B
+	{
+	   using namespace Z;
+	   void f(char);
+	   int i;
+	}
+	
+	namespace AB
+	{
+	   using namespace A;
+	   using namespace B;
+	   void g();
+	}
+	
+	void h()
+	{
+	   AB::g(); // g 直接定义在命名空间 AB 中，S 是 {AB::g()} 选择 AB::g()
+	   AB::f(1); // f 没有在 A 中发现，所以 规则应用到 A 和 B 上
+	             // 这个时候 S = {A::f(int), B::f(char)} 不为空 选择 A::f(int)
+	   AB::f('c'); // 跟上面一样，但是选择 A::f(char)
+	   AB::x++;// x 没有在 AB 中定义，也没有在 A 和 B定义，同时也没在 Y, Z中定义，所以S = {} 编译错误
+	   AB::h(16.8); // h 没有在AB，A，B 下定义，同样的规则应用于 Y 和 Z，所以S = {Y::h(int), Z::h(double)}
+	                // 通过重载规则，选择 Z::h(double)
+	}
+	```
+4. [*Note: 同样的声明找到多次不会造成歧义。*]
+	
+	例子说明：
+	
+	```cpp
+	namespace A
+	{
+	   int a;
+	}
+	
+	namespace B
+	{
+	   using namespace A;
+	}
+	
+	namespace C
+	{
+	   using namespace A;
+	}
+	
+	namespace BC
+	{
+	   using namespace B;
+	   using namespace C;
+	}
+	
+	void f()
+	{
+	   BC::a++; // S = {A::a, A::a}
+	}
+	
+	namespace D
+	{
+	   using A::a;
+	}
+	
+	namespace BD
+	{
+	   using namespace B;
+	   using namespace D;
+	}
+	
+	void g()
+	{
+	   BD::a++; // OK: S = {A::a, A::a}
+	}
+	```
+5. [*Note: 因为被引用的命名空间只多被搜索一次，下面的代码片段是符合标准的。*]
+	
+	例子说明：
+	
+	```cpp
+	namespace B
+	{
+	   int b;
+	}
+	
+	namespace A
+	{
+	   using namespace B;
+	   int a;
+	}
+	
+	namespace B
+	{
+	   using namespace A;
+	}
+	
+	void f()
+	{
+	   A::a++; // a 在 A 中定义 S = {A::a}
+	   B::a++; // A 和 B 只被搜索一次 S = {A::a}
+	   A::b++; // A 和 B 只被搜索一次 S = {B::b}
+	   B::b++; // 直接定义在命名空间中 S = {B::b}
+	}
+	```
+6. 在查找首先命名空间成员名字的时候，如果发现多个关于这个成员的声明，如果其中一个声明引入了一个类名字或者枚举类型的名字，其他的声明要么引用同一个变量，或者同一个枚举项或者重载函数集合，当且仅当非类型名字出现在跟类声明和枚举类型声明同一作用域时，会隐藏其名字的声明，否则程序是不符合规范的。
+	
+	例子说明：
+	
+	```cpp
+	namespace A
+	{
+	   class x {};
+	   int x;
+	   int y;
+	}
+	
+	namespace B
+	{
+	   class y {};
+	}
+	
+	namespace C
+	{
+	   using namespace A;
+	   using namespace B;
+	   int i = C::x; // Ok A::x 类型 int
+	   int j = C::y; // 歧义 A::y 或者 B::y 因为不在命名空间中
+	}
+	```
+7. 在声明命名空间成员的时候，`declarator-id`是一个`qualified-id`并且具有以下的格式：
+	<pre>
+	nested-name-specifier unqualified-id
+	</pre>
+	那么`unqualified-id`将表示命名空间`nested-name-specifier`的是一个成员名字或者是该命名空间下的`inline`命名空间里面的成员。
+	
+	例子说明：
+	
+	```cpp
+	namespace A
+	{
+	   namespace B
+	   {
+	      void f1(int);
+	   }
+	   using namespace B;
+	}
+	
+	void A::f1(int) {} // 在定义上下文，f1不是命名空间A的成员，编译错误
+	```
+	然后再这种命名空间定义的时候`nested-name-specifier`依赖`using-directives`隐式提供的`nested-name-specifier`初始化部分。
+	
+	例子说明：
+	
+	```cpp
+	namespace A
+	{
+	   namespace B
+	   {
+	      void f1(int);
+	   }
+	}
+	
+	namespace C
+	{
+	   namespace D
+	   {
+	      void f1(int);
+	   }
+	}
+	
+	using namespace A;
+	using namespace C::D;
+	
+	void B::f1(int) {} // OK，定义 A::B::f1(int)
+	```
+
 ## Elaborated 类型指示符
 
 ## 类成员访问
