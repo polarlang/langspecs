@@ -29,9 +29,9 @@
 |---- [作用域](basic-scope.md)<br/>
 |---- [名字查找](basic-name-lookup.md)<br/>
 |---- [程序与连接](basic-program-linkage.md)<br/>
-|---- [内存模型](basic-concepts.md#内存模型)<br/>
-|---- [数据类型](basic-concepts.md#数据类型)<br/>
-|---- [程序执行](basic-concepts.md#程序执行)<br/>
+|---- [内存模型](basic-memory-objects.md)<br/>
+|---- [数据类型](basic-types.md)<br/>
+|---- [程序执行](basic-program-execute.md)<br/>
 |-- [标准转换](standard-conversions.md)<br/>
 |---- [左值到右值的转换](standard-conversions.md#左值到右值的转换)<br/>
 |---- [数组到指针的转换](standard-conversions.md#数组到指针的转换)<br/>
