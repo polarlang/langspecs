@@ -249,3 +249,46 @@
 3. 存储周期的类型同样适用于引用类型。
 4. 在存储空间的生命周期结束后，所有指向存储空间的指针的值都是非法的值，不能再进行使用。间接的获取指针的值并且把指针的值传递给资源释放函数是未定义的程序行为，对于不合法的存储空间的指针的其他用法之后产生的结果由编译器进行制定。
 
+### 静态存储周期
+
+1. 所有没有动态存储周期，没有线程存储周期或者不是局部的变量都具有静态存储周期。这些变量实体的存储周期一直持续到程序结束。
+2. 如果一个具备静态存储周期的变量具有一个初始化器或者一个具有额外作用的析构器，那么即使这些过程看着没有用，编译器也不能省略。除非变量是一个类类型的对象或者它的复制移动可以按照`15.8`中描述的方式进行消除。
+3. 在局部代码块中通过`static`修饰的变量也具备静态存储周期。
+4. 如果以类的数据成员被`static`修饰那么这个数据成员具备静态存储周期。
+
+### 线程存储周期
+
+1. 所有通过`thread_local`关键字声明的变量都具备线程存储周期的属性。这些实体的存储周期应该持续到创建它的线程结束。每个线程都有一个不一样的对象或者对象的引用。并且在当前的线程中通过声明的名字进行实体的引用。
+2. 一个具有线程存储周期的变量，应该在它第一个`odr-use`之前进行初始化，如果一个这样的变量被构建，那么在线程退出的时候应该被销毁。
+
+### 自动存储周期
+
+1. 在块作用域中的一个变量如果没有声明成静态存储周期，线程存储周期或者`extern`，那么这个变量具有自动存储周期属性。
+2. [*Note：我们在`9.7`章节介绍自动存储周期变量的初始化和销毁。*]
+3. 如果一个具有自动存储周期的变量具有一个初始化器或者带有一个额外左右的析构器，那么编译器不能块结束之前销毁他或者消除这个变量，及时它看起来没有任何作用，除非他是一个类类型的对象或者复制移动可以按照`15.8`章节进行。
+
+### 动态存储周期
+
+1. 对象可以在动态的在程序运行时通过`new-expressions`表达式进行创建和通过`delete-expressions`进行销毁。极语言编译器应该提供创建动态存储周期的全局操作运算符函数 `operator new`，`operator new[]`或者销毁动态存储周期的全局操作符函数`operator delete`和`operator delete[]`。
+2. 标准库提供默认的全局资源分配和销毁的函数定义。一些全局的存储分配和释放函数是可以进行替换的，为这些可以替换的函数，极语言必须提供只多一个定义。下面的这些全局的存储空间分配和销毁函数隐式的在所有的转换单元里面的全局作用域中进行了声明。
+	
+	声明代码：
+	
+	```cpp
+	[[nodiscard]] void* operator new(std::size_t);
+	[[nodiscard]] void* operator new(std::size_t, std::align_val_t);
+	
+	void operator delete(void*) noexcept;
+	void operator delete(void*, std::size_t) noexcept;
+	void operator delete(void*, std::align_val_t) noexcept;
+	void operator delete(void*, std::size_t, std::align_val_t) noexcept;
+	
+   [[nodiscard]] void* operator new[](std::size_t);   [[nodiscard]] void* operator new[](std::size_t, std::align_val_t);
+   
+   void operator delete[](void*) noexcept;
+   void operator delete[](void*, std::size_t) noexcept;
+   void operator delete[](void*, std::align_val_t) noexcept;
+   void operator delete[](void*, std::size_t, std::align_val_t) noexcept;
+	```
+	隐式声明只包含函数`operator new`，`operator new[]`，`operator delete`和`operator delete[]`。[*Note: 隐式声明没有引入名字`polar`，`polar::size_t`，`polar::align_val_t`和任何在标准库中用来声明这些名字所用的名字。所以所有使用`new-expression`，`delete-expression`和所有引用这些函数的调用时候引入 `new module` 是符合规范的。然而使用`polar`或者`polar::size_t`或者`polar::align_val_t`是不符合规范的，除非引用相关的模块。*] 资源分配或者资源释放函数也可以被任何类进行声明和定义。
+3. 极语言中的所有的存储资源的分配和释放的函数语义，包含标准库提供的默认版本，都必须符合下面两节中定义的语义规范。
