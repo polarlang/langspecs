@@ -71,3 +71,10 @@
 ## 基础类型
 
 1. 被声明成字符类型的大小必须要能容纳基础字符集任何一个成员字符。如果一个基本字符集里面的字符存储在一个字符对象，这个字符对象的整形值等于这个字符的字面量的整数值。一个字符对象是否可以存放负数由编译器自己决定。字符可以被声明为`unsigned`或者`signed`。无格式的`char`，`signed char`和`unsigned char`是三个不一样的类型，统一叫做窄字符类型。`char`，`signed char`和`unsigned char`占用相同的存储空间并且有相同的对齐要求。也就是说他们具有相同的对象表示。对于窄字符类型，对象表示中的所有的位都参与对象的值表示。[*Note: 一个窄字符类型的位域，如果位域指定的大小大于相应的窄字符类型的对象表示位的位数大小时候，这个位域有填充位序列。*]对于无符号的窄字符类型，字符对象的值表示的任何一种组合都代表不一样的整数值。对于其他的数据类型来说可能没有这些要求。对于特定的编译器来说，无格式的`char`可能代表`signed char`或者`unsigned char`；具体采用那个是由编译器决定。在`unsigned char`类型表示的闭区间[0..255]其中的一个数值`i`，都存在一个`char`类型的`j`，`j`的值是用`i`转换成`char`类型得到的，并且得到值`j`转换成`unsigned char`又能得到`i`值。
+2. 有五种标准有符号的整数类型：`signed char`，`short int`，`int`，`long int`和`long long int`。这个列表中，在后面的类型类型的存储空间至少是大于等于前一个。编译器可能提供扩展的有符号整数类型（`extended signed integer types`）。扩展的整形类型和标准的整形类型统称有符号的整数类型。无格式的`int`具有自然大小由当前执行环境确定。其他的有符号类型为了特殊的需求而提供的。
+3. 对于每个标准的有符号整数类型都存在一个对应的但是不一样的无符号类型，叫做标准的无符号整数类型：`unsigned char`，`unsigned short int`，`unsigned int`，`unsigned long int`和`unsigned long long int`这个类型跟对应的整数类型所占的存储空间和对齐等要求保持一致。也就是说有符号的整形的跟无符号整形的对象表示是一致的。类似的扩展的有符号整形跟扩展的无符号整形有相同的存储空间要求和对齐要求。标准和扩展的无符号整形统称为无符号整形。有符号整形的正数部分的是其对应的无符号整形的子集。相同的值在两种整形类型中的表示是相同的，有符号整形和对应的无符号整形的值类型表示是一样的。标准的有符号整形跟标准的无符号整形统称为标准整形（`standard integer types`）。扩展的有符号整形和扩展的无符号整形统称为扩展整形（`extended integer types`）。有符号整形和无符号整形应该遵守`C`相关的规范。
+4. 无符号整形的值应该遵守2<sup>n</sup>的取模运算，`n`是特性的整数的值表示的二进制的位数。
+5. `wchar_t`是一个能够表示最大的扩展字符集的所有成员（支持本地化）。`wchar_t`跟其底层表示（`underlying type`）的整形具有相同的大小，符号和对齐要求。`char16_t`和`char32_t`依次跟类型`uint_least16_t`和`uint_least32_t`具有相同的大小，符号和对齐要求。相对应的定义在模块中`cstdint`，叫做底层类型。
+6. `boolean`类型的值要么是`false`要么是`true`。[*Note: 没有signed，unsigned，short 或者 long 类型的 boolean 类型或者相关值。*]`boolean`类型的值参与整形提升转换。
+7. `bool`，`char`，`char16_t`，`char32_t`和`wchar_t`，有符号整形和无符号整形统`integral types`。`integral`类型的值应该使用原生的二进制位进行定义。[*Note: 本规范整允许`two’scomplement`，`ones’ complement`和`signed magnitude`表示法。*]
+8. 有三种浮点类型：`float`，`double`和`long double`。`double`类型的精度至少大于等于`float`，`long double`的精度至少大于等于`double`。`float`浮点数能够表示的值的集合是`double`浮点数能表示的集合的子集。`double`能表示的值的集合是`long double`能表示的集合的子集。浮点数的值表示形式由编译器自行决定。[*Note: 本规范中没有规定浮点操作室的精度。*]整形和浮点型统称为算数类型（`arithmetic types`）。标准库中的`polar::numeric_limits`应该指定所有算数类型的最大值和最小值。
