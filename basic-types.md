@@ -78,3 +78,6 @@
 6. `boolean`类型的值要么是`false`要么是`true`。[*Note: 没有signed，unsigned，short 或者 long 类型的 boolean 类型或者相关值。*]`boolean`类型的值参与整形提升转换。
 7. `bool`，`char`，`char16_t`，`char32_t`和`wchar_t`，有符号整形和无符号整形统`integral types`。`integral`类型的值应该使用原生的二进制位进行定义。[*Note: 本规范整允许`two’scomplement`，`ones’ complement`和`signed magnitude`表示法。*]
 8. 有三种浮点类型：`float`，`double`和`long double`。`double`类型的精度至少大于等于`float`，`long double`的精度至少大于等于`double`。`float`浮点数能够表示的值的集合是`double`浮点数能表示的集合的子集。`double`能表示的值的集合是`long double`能表示的集合的子集。浮点数的值表示形式由编译器自行决定。[*Note: 本规范中没有规定浮点操作室的精度。*]整形和浮点型统称为算数类型（`arithmetic types`）。标准库中的`polar::numeric_limits`应该指定所有算数类型的最大值和最小值。
+9. `cv void`是一个不完整类型并且也不能变完整；这样的类型的值域为空。这个类型用在那些返回值为空的函数返回值类型定义。`cv void`表达式只能用在表达式语句中。作为一个逗号表达式的操作数，或者三元运算符`?:`的第二个或者第三个操作数。或者作为`typeid`，`noexcept`或者`decltype`的操作数。当做一个表达式用在`return`语句中，为那些返回值类型为`cv void`的函数提供返回值。用在一个显式类型转换中。
+10. `polar::nullptr_t`类型的值是一个空指针常量。这样的值参与指针或者成员指针的转换。sizeof(polar::nullptr_t)应该跟sizeof(void *)大小一致。
+11. [*Note: 即使编译器定义的两个或者多个类型具有相同的值表示，他们毫无悬念也是属于不同类型。*]
