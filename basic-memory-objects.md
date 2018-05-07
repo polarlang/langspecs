@@ -121,13 +121,13 @@
 	1. 对象有一个非平凡的析构函数，这个指针被用在了`delete-expression`表达式中。
 	2. 指针用来访问非静态数据成员或者非静态函数成员。
 	3. 指针隐式的转换成指向虚拟基类的指针类型。
-	4. 除了后面的转换类型，转换成`cv void`类型或者指向`cv void`类型的指针并且随后变成指向`cv char`或者`cv unsigned char`或者`cv std::byte`类型的指针。
+	4. 除了后面的转换类型，转换成`cv void`类型或者指向`cv void`类型的指针并且随后变成指向`cv char`或者`cv unsigned char`或者`cv polar::byte`类型的指针。
 	5. 指针被用在了转换操作符`dynamic_cast`的操作数：
 		
 		例子说明：
 		
 		```cpp
-		import cstdlib;
+		import cpolarlib;
 		
 		class B
 		{
@@ -275,20 +275,37 @@
 	声明代码：
 	
 	```cpp
-	[[nodiscard]] void* operator new(std::size_t);
-	[[nodiscard]] void* operator new(std::size_t, std::align_val_t);
+	[[nodiscard]] void* operator new(polar::size_t);
+	[[nodiscard]] void* operator new(polar::size_t, polar::align_val_t);
 	
 	void operator delete(void*) noexcept;
-	void operator delete(void*, std::size_t) noexcept;
-	void operator delete(void*, std::align_val_t) noexcept;
-	void operator delete(void*, std::size_t, std::align_val_t) noexcept;
+	void operator delete(void*, polar::size_t) noexcept;
+	void operator delete(void*, polar::align_val_t) noexcept;
+	void operator delete(void*, polar::size_t, polar::align_val_t) noexcept;
 	
-   [[nodiscard]] void* operator new[](std::size_t);   [[nodiscard]] void* operator new[](std::size_t, std::align_val_t);
+   [[nodiscard]] void* operator new[](polar::size_t);   [[nodiscard]] void* operator new[](polar::size_t, polar::align_val_t);
    
    void operator delete[](void*) noexcept;
-   void operator delete[](void*, std::size_t) noexcept;
-   void operator delete[](void*, std::align_val_t) noexcept;
-   void operator delete[](void*, std::size_t, std::align_val_t) noexcept;
+   void operator delete[](void*, polar::size_t) noexcept;
+   void operator delete[](void*, polar::align_val_t) noexcept;
+   void operator delete[](void*, polar::size_t, polar::align_val_t) noexcept;
 	```
 	隐式声明只包含函数`operator new`，`operator new[]`，`operator delete`和`operator delete[]`。[*Note: 隐式声明没有引入名字`polar`，`polar::size_t`，`polar::align_val_t`和任何在标准库中用来声明这些名字所用的名字。所以所有使用`new-expression`，`delete-expression`和所有引用这些函数的调用时候引入 `new module` 是符合规范的。然而使用`polar`或者`polar::size_t`或者`polar::align_val_t`是不符合规范的，除非引用相关的模块。*] 资源分配或者资源释放函数也可以被任何类进行声明和定义。
 3. 极语言中的所有的存储资源的分配和释放的函数语义，包含标准库提供的默认版本，都必须符合下面两节中定义的语义规范。
+
+#### 存储资源分配函数
+
+1. 一个存储空间分配函数要么是一个类的成员函数要么是全局函数。如果存储空间分配函数如果在一个非全局命名空间或者在全局命名空间中被声明成静态函数，那么程序是不符合规范的。返回值应该为`void *`类型。函数的第一个参数类型应该为`polar::size_t`并且不能有默认值，第一个参数应该被解释成请求分配的存储空间的所需字节数，存储空间分配函数可以为模板函数。如果是模板函数的话，返回值和第一个参数的要求跟非模板函数保持一致。函数模板存储空间分配函数应该有两个或者多个参数。
+2. 存储空间分配函数尝试分配请求数量的存储空间。如果分配成功，将返回一个大小至少是请求大小字节数且连续的存储空间的首字节的地址。对于通过资源分配函数分配的存储空间的内容没有任何要求。对两次连续调用空间分配函数得到的两个空间存储存储空间的顺序，连续性，存储空间的初始值没有做任何规定。返回的地址必须进行合适的对齐，这个地址要能转换成任何合适的完整对象的类型并且可以用来访问分配的存储空间里面的对象和数组。（直到存储空间被显式的调用存储空间释放函数而进行释放）即使请求分配的资源大小为零，分配请求也可能失败。如果存储空间请求分配成功，返回的地址`p0`应该跟上一次分配成功返回的地址`p1`不一样，除非`p1`后来被传递给了`operator delete`进行了资源释放。`p0`代表一块与存储空间调用者所有可访问的存储空间都不相交的一块存储空间。间接访问一个请求分配大小为零返回的地址，程序的行为是未定义的。
+3. 一个分配函数分配资源出错，系统应该调用当前安装的`new-handler`，如果有的话。[*Note: 程序提供的存储空间分配函数可以通过`polar::get_new_handler`获取系统当前安装的`new-handler`函数的地址。*]一个存储分配函数如果指定了`non-throwing exception specification`，那么当分配失败的时候，应该返回一个空指针。任何其他的存储空间分配函数失败时候应该抛出一个跟`polar::bad_alloc`相容的异常类型。
+4. 一个全局的资源分配函数只能通过`new expression`调用或者使用函数的调用语法进行调用或者间接的在极语言标准库的一些函数中进行调用。[*Note: 全局存储空间分配函数不为具有静态存储周期的对象或者具有线程存储周期的对象或者引用或者`polar::type_info`类型的对象或者异常对象分配存储空间。*]
+
+#### 存储资源释放函数
+
+
+#### 安全导向的指针（Safely-derived pointers）
+
+### 子对象的存储周期
+
+## 对齐
+
