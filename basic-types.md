@@ -109,3 +109,59 @@
 	4. 存在一个对象`c`，对象`a`跟对象`c`指针互换并且对象`b`跟对象`c`指针互换。
 	如果两个对象是指针互换的，那么他们的地址是一样的。可以是使用`reinterpret_cast`从指针`a`到指针`b`转换。[*Note: 数组的对象和数组第一个元素对象不是指针互换类型，尽管他们的地址值是一样的。*]
 5. 一个指向`cv-qualified`或者`cv-unqualified`的`void`可以用来指向位置类型的对象。这种指针类型可以存储任何类型的指针类型。一个`cv void *`指针类型应该跟`cv char *`有相同的表示和一样的对齐要求。
+
+## CV-qualifiers
+
+1. 一个没有被关键字`const`和`volatile`修饰的类型叫做`cv-unqualified`类型。每个`cv-unqualified`的完整类型或者不完整类型或者`void`类型。有三种对应版本的`cv-qualified`对象类型：一个`const qualified`版本，一个`volatile-qualified`版本和`const-volatile-qualified`版本。一个对象的类型包含在对象创建时候在`decl-specifier-seq`，`declarator`，`type-id`或者`new-type-id`等表达式中使用的`cv-qualifiers`。
+	1. 常量对象（`const object`）是类型为`const T`的对象，或者这个对象里面的不可变的（`non-mutable`）子对象。
+	2. 易变对象（`volatile object`）是类型为`volatile T`的对象，或者这样的对象的子对象，或者一个`const volatile`对象的可变子对象。
+	3. 常量易变对象（`const volatile object`）是类型为`const volatile T`或者这样的对象的不可变（`non-mutable`）子对象或者一个易变对象的常量类型子对象或者一个常量对象的一个不可变的易变对象。
+	一个类型的`cv-qualified`和`cv-unqualified`版本是不一样的类型，但是它们具有同样的值表示方式和相同的对齐要求。
+2. 如果`cv-qualifiers`用在复合类型的成员上面的话，那么复合类型本身不是`cv-qualified`类型。用在数组声明中的`cv-qualifiers`作用在这个数组的元素的类型上。
+3. 在`11.3.5`和`12.2.2.1`中介绍`cv-qualifiers`用在函数声明上面的详细情况。
+4. 下面的表是`cv-qualifiers`的一个半序表，一个类型可以说比另一个类型更加`v-qualified`。表示中描述了组成这个顺序的一个半序关系。
+	
+	表9 const 和 volatile 之间的关系
+	```
+   |----------------------------------|
+   | no cv-qualifier < const          |
+   |----------------------------------|
+   | no cv-qualifier < volatile       |
+   |----------------------------------|
+   | no cv-qualifier < const volatile |
+   |----------------------------------|
+   | const           < const volatile |
+   |----------------------------------|
+   | volatile        < const volatile |
+   |----------------------------------|
+	```
+5. 在这个文档中的`cv`标记（或者`cv1`，`cv2`等等），用在类型描述中，表示任意`cv-qualifiers`的组合，比如：是 {const}， {volatile}， {const, volatile}或者空集。对于一个`cv T`类型，这个类型的顶层的`cv-qualifiers`由这个`cv`表示。[*Example：类型id`const int&`没有顶层的`cv-qualifiers`。类型id`volatile int * const`的顶层`cv-qualifiers`是`const`。对于一个类的类型id`void(C::* volatile)(int) const`顶层的`cv-qualifiers`是`volatile`。*]
+6. 在声明数组类型时候使用的`cv-qualifiers`作用于数组的底层元素类型上，所以`cv T`，这里的`T`代表一个数组类型，整个表达式声明了一个数组元素被`so-qualified`的数组类型。一个数组元素`so-qualified`可以等价的表示数组中的所有的元素具有同样的`cv-qualifications`。
+
+	例子说明：
+	
+	```cpp
+	typedef char CA[5];
+	typedef const char CC;
+	CC arr1[5] = { 0 };
+	const CA arr2 = { 0 };
+	```
+	数组`arr1`和数组`arr2`的类型是有五个`const char`元素的数组。数组的类型可以考虑成`const-qualified`。
+
+## 整数转换等级
+
+1. 所有的整数都有一个按照下面定义的整数转换等级：
+	1. 除了`char`和`signed char`之外的所有有符号整型的转换等级都不相等，即使他们具有相同的二进制表示。
+	2. 在有符号整形中，表示范围大的整数类型的转换等级大于表示范围小的整数类型。
+	3. 按照转换等级排序，有下面的顺序：`long long int` > `long int` > `int` > `short int` > `signed char`。
+	4. 一个有符号整数类型跟其对应的无符号整数类型具有一样的转换等级。
+	5. 所有标准的整数类型的转换等级大于相同大小的扩展的整数类型的转换等级。
+	6. `char`的转换等级与`signed char`和`unsigned char`相等。
+	7. `boolean`的转换等级比其他标准的整数类型的转换等级要低。
+	8. `char16_t`，`char32_t`和`wchar_t`的转换等级跟其对应底层描述数据类型的转换等级相等。
+	9. 扩展的有符号整数类型跟另一个同样大小的扩展有符号转换类型的转换等级由编译器决定。但是也得服从其他决定整形转换等级的规则。
+	10. 对于整数类型`T1`，`T2`和`T3`，`T1`的转换等级大于`T2`并且`T2`的转换等级大于`T3`，那么`T1`的转换等级大于`T3`。
+		[*Note: 整数的转换等级用在整形提升定义和算数转换之中。*]
+	
+	
+	
