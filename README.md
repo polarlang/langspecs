@@ -10,6 +10,10 @@ langspecs 库定义了语言规范，目前是草案阶段，有兴趣的同学�
 
 > [https://github.com/polarlang/langspecs/issues](https://github.com/polarlang/langspecs/issues)
 
+或者
+
+> [https://gitee.com/polarlang/langspecs/issues](https://github.com/polarlang/langspecs/issues)
+
 库的上游地址是：(暂未开通)
     
     git@git.polarlang.org:/langspecs.git
@@ -17,6 +21,10 @@ langspecs 库定义了语言规范，目前是草案阶段，有兴趣的同学�
 在 github 的镜像地址是：
 
 > [https://github.com/polarlang/langspecs](https://github.com/polarlang/langspecs)
+
+在 gitee 的镜像地址是：
+
+> [https://gitee/polarlang/langspecs](https://github.com/polarlang/langspecs)
 
 polarlang 的语言规范是开源规范，非常欢迎感兴趣的同学给我们发 pull request 和给我们反馈错误的 issue，详情请参考我们的[*贡献细则*](CONTRIBUTING.md)。
 

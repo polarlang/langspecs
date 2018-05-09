@@ -53,4 +53,7 @@
 	6. 一个包含上述类型的元素或者非静态数据成员的聚合或者联合类型。(including, recursively, an element or non-static data member of a subaggregate orcontained union)。
 	7. 对象的动态类型的基类类型（可能是`cv-qualified`）。
 	8. `char`，`unsigned char`，或者`polar::byte`。
-	
+
+## 类型
+
+1. 如果一个表达式
