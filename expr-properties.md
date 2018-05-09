@@ -26,6 +26,7 @@
 	简单来说，这条规则的效果是命名的右值（`rvalue`）引用被当成一个左值（`lvalue`），未命名的对象右值引用被当着`xvalue`；函数的右值（`rvalue`）引用，不管是否被命名都被当成`xvalue`。
 	
 	例子说明：
+	
 	```cpp
 	class A
 	{
@@ -56,4 +57,41 @@
 
 ## 类型
 
-1. 如果一个表达式
+1. 如果一个表达式的类型是类型`T`的引用类型，在进行其他分析之前表达式的类型会被调整成类型`T`。表达式指定对象或者函数的引用并且表达式的分类是`lvalue`或者`xvalue`由表达式本身决定。[*Note: 引用类型开始之前或者结束之后进行使用，程序的行为是未定义的。*]
+2. 如果一个`prvalue`分类的表达式初始类型是`cv T`并且类型`T`是一个`cv-unqualified`的非类类型，非数组类型。表达式的类型在进行其他处理之前，会被调整为`T`。
+3. 类型`T1`和类型`T2`的`cv-combined`类型`T3 similar to T1`并且`cv-qualification`原型是：
+	1. 对于所有的`i > 0`，cv<sub>i</sub><sup>3</sup>是cv<sub>i</sub><sup>1</sup>和cv<sub>i</sub><sup>2</sup>的联合。
+	2. 如果cv<sub>i</sub><sup>3</sup>跟cv<sub>i</sub><sup>1</sup>或者cv<sub>i</sub><sup>2</sup>不一样，那么`const`将添加到所有的cv<sub>k</sub><sup>3</sup>上面，其中`0 < k < i`。[ Note: Given similar types T1 and T2, this construction ensures that both can be converted to T3. —endnote ]
+4. 类型`T1`的操作数`p1`和类型`T2`的操作数`p2`的`composite pointer type`，至少有一个是指针类型或者成员指针类型或者`polar::nullptr_t`：
+	1. 如果`p1`跟`p2`都是空指针常量的话组合结果是`polar::nullptr_t`;
+	2. 如果`p1`或者`p2`是空指针常量，组合结果相应的是类型`T2`或者类型`T1`;
+	3. 如果类型`T1`或者类型`T2`，其中一个是指向`cv1 void`的指针类型并且另一个是指向`cv2 T`的指针类型，这里的`T`是对象类型或者`void`类型。那么他们组合指针类型是`pointer to cv12 void`，这里的`cv12`是`cv1`和`cv2`的联合。
+	4. 如果类型`T1`或者类型`T2`，其中一个是指向`noexcept`函数类型的指针类型并且另一个是指向函数类型的指针类型，那么组合类型是指向函数类型的指针类型。
+	5. 如果`T1`是指向`cv1 C1`的指针并且`T2`是指向`cv2 C2`的指针，这里`C1`是`C2`的引用相关的类型，或者`C2`是`C1`的引用相关的类型。那么组合指针类型是`T1`和`T2`的`cv-combined`类型或者是`T2`和`T1`的`cv-combined`类型。
+	6. 如果`T1`是指向类`C1`的类型为`cv1 U1`的成员的成员指针类型并且`T2`是指向类`C2`的类型为`cv2 U2`的成员的成员指针类型，这里的`C1`是`C2`引用相关的类型或者`C2`是`C1`引用相关的类型。组合指针类型是`T2`和`T1`的`cv-combined`类型，或者`T1`和`T2`的`cv-combined`类型。
+	7. 如果`T1`跟`T2`是`similar`类型，那么组合指针类型是`T1`和`T2`的`cv-combined`类型。
+	8. 如果其他任何形式的组合出现，那么程序是不符合规范的。
+	
+	例子说明：
+	
+	```cpp
+	typedef void *p;
+	typedef const int *q;
+	typedef int **pi;
+	typedef const int **pci;
+	```
+	指针类型`p`和指针类型`q`的组合指针类型是`const void *`，指针类型`pi`和指针类型`pci`的组合指针类型是`const int * const *`。
+
+## 上下文依赖
+
+1. 在有些上下文中，能够出现不被求值的操作数（8.4.7, 8.5.1.8, 8.5.2.3, 8.5.2.7, 10.1.7.2, Clause 17）。一个不被求值的操作数是没有没求值的。[*Note: 在一个没有求值的环境中，一个类的非静态成员可能被命名，但是对象或者函数没有命名，所以要求其定义一个要提供。一个未求值的操作数可以看成一个完整的表达式。*]
+2. 在一些上下文中，表达式的存在仅仅是为了其副作用。这样的表达式叫做值丢弃表达式（`discarded-value expression`），标准准换`array-to-pointer`和`function-to-pointer`不会被应用。当且仅当表达式的类型是被`volatile-qualified`修饰`glvalue`的分类的值类型并且是下面的情况之一时，表达式的值类型会被进行标准的`lvalue-to-rvalue`转换：
+	1. `(expression)`，这里的`expression`列出的几种情况之一的表达式。
+	2. 标识符表达式（`id-expression`）。
+	3. 下标访问表达式（`subscripting`）。
+	4. 类成员访问表达式（`class member access`）。
+	5. 间接访问表达式（`indirection`）。
+	6. 指向成员的操作表达式（`pointer-to-member`）。
+	7. 三元条件表达式（`conditional expression`），其中其二个和第三个操作数是这个列表中出现的表达式类型之一。
+	8. 逗号表达式（`comma expression`），其中右边的表达式是这里支持的表达式类型之一。
+	[*Note: 使用重载的运算符会导致一个函数调用；上面的情况只包含内置的操作运算符的情况。*]如果表达式（或者转换后的）的分类是`prvalue`，那么`temporary materialization conversion`将被应用。[*Note: 如果表达式的类型是类类型的左值分类，那么它必须具有一个易变的构造函数去初始化由应用`lvalue-to-rvalue`转换获取的临时对象。*]`glvalue`分类的表达式将会被求值，但是结果被丢弃。
