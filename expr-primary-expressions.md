@@ -63,3 +63,49 @@ primary-expression:
 
 ## 名字
 
+<pre>
+id-expression:
+	unqualified-id
+	qualified-id
+</pre>
+
+1. 一个`id-expression`是一个受限形式的`primary-expression`。[*Note: 一个`id-expression`可以出现在`.`和`->`运算符的后面。*]
+2. 如如一个`id-expression`被用作指示一个类类型的非静态数据成员或者非静态函数成员，那么它只能按照下面的方式进行使用：
+	1. 作为类类型成员访问表达式的一部分，其中对象表达式表示成员所在的类类型或者一个从其派生得到的类类型，或者
+	2. 组成一个指向成员的指针类型表达式，或者
+	3. 如果`id-expression`指示了一个非静态的数据成员并且用在了非求值的操作数表达式中。
+	
+	例子说明：
+	
+	```cpp
+	class S
+	{
+	   int m;
+	};
+	
+	int i = sizeof(S::m); // OK
+	int j = sizeof(S::m + 42); // OK
+	```
+3. 如果一个`id-expression`表达式指示的是一个概念类型（`concept`）的特殊化，并且那个概念类型的结果是一个分类的值类型是`bool`类型的`prvalue`分类。那么表达式为`true`，如果指定的模板类型实参满足了概念的`constraint-expression`，否则表达式的结果是`false`。
+	
+	例子说明：
+	
+	```cpp
+	template<typename T> concept C = true;
+	static_assert(C<int>); // OK
+	```
+	[*Note: 概念限制在使用一个模板名字，函数重载的选择并且这些他们在一个限制的半序排序中被比较。（`17.4.4`）*]
+4. 如果一个程序显式或者隐式的引用一个尾部具有`requires-clause`分句的函数，并且其限制没有被满足，那么除了声明这个函数，其他任何使用，程序都是不符合规范的。
+	
+	例子说明：
+	
+	```cpp
+	void f(int) requires false;
+	void g() {
+	   f(0); // error: cannot call f
+	   void (*p1)(int) = f; // error: cannot take the address of f
+	   decltype(f)* p2 = nullptr; // error: the type decltype(f) is invalid
+	}
+	```
+	在每一种情况中函数`f`的限制都没有被满足，在声明`p2`中，尽管是用在非求值的操作数中，函数`f`的这些限制也是会被考虑。
+	
